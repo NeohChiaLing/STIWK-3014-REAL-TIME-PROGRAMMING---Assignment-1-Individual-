@@ -9,21 +9,22 @@ public class DirectoryAnalysis {
         this.issueCount = 0;
     }
 
-    public void analyzePath(String path) {
-        File folder = new File(path);
+    public void analyzePath(String path) throws Exception {
+        this.javaFileCount = 0;
+        this.issueCount = 0;
 
+        File folder = new File(path);
         if (!folder.exists()) {
-            System.out.println("Error: The path does not exist."); //error handling
-            return;
+            throw new IllegalArgumentException("The path does not exist. Please try again with correct path."); //error handling
         }
         if (!folder.isDirectory()) {
-            System.out.println("Error: This is a file, not a directory.");//error handling
-            return;
+            throw new IllegalArgumentException("The path provided is not a directory. Please try again with correct path.");//error handling
         }
-        File[] listOfFiles = folder.listFiles(); //listout all the files
+
+        File[] listOfFiles = folder.listFiles();
 
         if (listOfFiles != null) {
-            for (File file : listOfFiles) {
+            for (File file : listOfFiles) { //checking the list of files
                 if (file.isFile()) {
                     checkFileTypes(file.getName());
                 }
@@ -31,14 +32,11 @@ public class DirectoryAnalysis {
         }
     }
 
-    //categorize file sections (differentiate between .java and .txt file
     private void checkFileTypes(String fileName) {
-        // Check for Java files
-        if (fileName.endsWith(".java")) {
+        if (fileName.endsWith(".java")) { //counting any files any with .java
             javaFileCount++;
         }
-        //any file end with .txt is equal to issue files
-        else if (fileName.contains("Issue") || fileName.endsWith(".txt")) {
+        else if (fileName.contains("Issue") || fileName.endsWith(".txt")) { //counting any files any with .txt
             issueCount++;
         }
     }
